@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
-
+//导入基础样式
+import './style/base.css'
+import './style/normalize.css'
 //引入element-ui
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
