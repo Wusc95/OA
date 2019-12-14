@@ -11,7 +11,8 @@ import router from './router/router.js'
 //注册
 Vue.use(ElementUI);
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+window.console.log(process.env.VUE_APP_BASEURL)
 
 new Vue({
   router,
