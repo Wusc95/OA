@@ -1,7 +1,7 @@
 <template>
   <div class="login-main">
     <div class="login-box">
-      <el-form ref="form" :model="form" :rules="rules">
+      <el-form ref="form" :model="form" :rules="rules" status-icon>
         <el-form-item>
           <div class="login-title">
             <img src="../../assets/login-logo.png" alt />
@@ -12,7 +12,7 @@
         </el-form-item>
 
         <el-form-item prop="tel">
-          <el-input placeholder="请输入手机号" prefix-icon="el-icon-user" v-model="form.tel"></el-input>
+          <el-input  placeholder="请输入手机号" prefix-icon="el-icon-user" v-model="form.tel"></el-input>
         </el-form-item>
 
         <el-form-item prop="password">
@@ -30,7 +30,7 @@
               <el-input placeholder="请输入验证码" prefix-icon="el-icon-key" v-model="form.captcha"></el-input>
             </el-col>
             <el-col :span="6">
-              <img class="captchaPic" :src="captchaURL" @click="getCaptcha"/>
+              <img class="captchaPic" :src="captchaURL" @click="getCaptcha" />
             </el-col>
           </el-row>
         </el-form-item>
@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
     var checkPhone = (rule, value, callback) => {
@@ -78,7 +79,7 @@ export default {
         captcha: ""
       },
       rules: {
-        tel: [{ required: true, validator: checkPhone, trigger: "blur" }],
+        tel: [{ required: true, validator: checkPhone, trigger: "change" }],
         password: [
           { required: true, message: "请输入密码", trigger: "blur" },
           {
@@ -93,7 +94,8 @@ export default {
           { min: 4, max: 4, message: "验证码长度为4", trigger: "change" }
         ]
       },
-      captchaURL:process.env.VUE_APP_BASEURL+'/captcha?type=login&_t'+Date.now()
+      captchaURL:
+        process.env.VUE_APP_BASEURL + "/captcha?type=login&_t" + Date.now()
     };
   },
   methods: {
@@ -101,18 +103,31 @@ export default {
       this.$refs.form.validate(valid => {
         if (this.form.checked == true) {
           if (valid) {
-            this.$message.success("登陆成功");
+            axios({
+              url: process.env.VUE_APP_BASEURL + "/login",
+              method: "post",
+              withCredentials: true,
+              data: {
+                phone: this.form.tel,
+                password: this.form.password,
+                code: this.form.captcha
+              }
+            }).then(res => {
+              window.console.log(res);
+              this.$message.success("登陆成功");
+            });
           } else {
-            this.$message.error("登陆失败");
+            this.$message.error("请填写正确的信息");
             return false;
           }
-        }else{
-          this.$message.error('请勾选用户协议');
+        } else {
+          this.$message.error("请勾选用户协议");
         }
       });
     },
-    getCaptcha(){
-      this.captchaURL=process.env.VUE_APP_BASEURL+'/captcha?type=login&_t'+Date.now()
+    getCaptcha() {
+      this.captchaURL =
+        process.env.VUE_APP_BASEURL + "/captcha?type=login&_t" + Date.now();
     }
   }
 };
