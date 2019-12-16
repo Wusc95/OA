@@ -130,18 +130,18 @@ export default {
     };
     //注册验证逻辑
     //验证邮箱
-    var checkEmail = (rule,value,callback)=>{
-      if(!value){
+    var checkEmail = (rule, value, callback) => {
+      if (!value) {
         return callback(new Error("邮箱不能为空"));
-      }else{
+      } else {
         const regEmail = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
-        if(regEmail.test(value) == true){
+        if (regEmail.test(value) == true) {
           callback();
-        }else{
-          return callback(new Error('请输入正确的邮箱'));
+        } else {
+          return callback(new Error("请输入正确的邮箱"));
         }
       }
-    }
+    };
 
     return {
       form: {
@@ -154,7 +154,12 @@ export default {
         tel: [{ required: true, validator: checkPhone, trigger: "change" }],
         password: [
           { required: true, message: "请输入密码", trigger: "blur" },
-          { min: 6, max: 18, message: "长度在 6 到 18 个字符", trigger: "change"}
+          {
+            min: 6,
+            max: 18,
+            message: "长度在 6 到 18 个字符",
+            trigger: "change"
+          }
         ],
         captcha: [
           { required: true, message: "请输入验证码", trigger: "blur" },
@@ -169,16 +174,26 @@ export default {
         picCode: "",
         captcha: ""
       },
-      registerRules:{
-        phone:[{required:true,validator:checkPhone,trigger:"blur"}],
-        name:[
-          {required:true,message:'请输入昵称',trigger:'blur'},
-          {min:3,max:12,message:'长度在 6 到 12 个字符',trigger:'change'}
+      registerRules: {
+        phone: [{ required: true, validator: checkPhone, trigger: "blur" }],
+        name: [
+          { required: true, message: "请输入昵称", trigger: "blur" },
+          {
+            min: 3,
+            max: 12,
+            message: "长度在 6 到 12 个字符",
+            trigger: "change"
+          }
         ],
-        email:[{required:true,validator:checkEmail,trigger:'blur'}],
+        email: [{ required: true, validator: checkEmail, trigger: "blur" }],
         password: [
           { required: true, message: "请输入密码", trigger: "blur" },
-          { min: 6, max: 18, message: "长度在 6 到 18 个字符", trigger: "change"}
+          {
+            min: 6,
+            max: 18,
+            message: "长度在 6 到 18 个字符",
+            trigger: "change"
+          }
         ],
         picCode: [
           { required: true, message: "请输入图形码", trigger: "blur" },
@@ -187,13 +202,15 @@ export default {
         captcha: [
           { required: true, message: "请输入验证码", trigger: "blur" },
           { min: 4, max: 4, message: "验证码长度为4", trigger: "change" }
-        ],
+        ]
       },
       imageUrl: "",
       dialogFormVisible: false,
       formLabelWidth: "70px",
-      LoginCaptchaURL:process.env.VUE_APP_BASEURL + "/captcha?type=login&_t" + Date.now(),
-      RegisterCaptchaUrl:process.env.VUE_APP_BASEURL + "/captcha?type=login&_t" + Date.now(),
+      LoginCaptchaURL:
+        process.env.VUE_APP_BASEURL + "/captcha?type=login&_t" + Date.now(),
+      RegisterCaptchaUrl:
+        process.env.VUE_APP_BASEURL + "/captcha?type=sendsms&_t" + Date.now()
     };
   },
   methods: {
@@ -213,7 +230,10 @@ export default {
             }).then(res => {
               window.console.log(res);
               //调用接口返回处理结果
-              this.$message.success("登陆成功");
+              if (res.data.code == 200) {
+                this.$message.success("登陆成功");
+                this.$router.push("/index");
+              }
             });
           } else {
             this.$message.error("请填写正确的信息");
@@ -224,22 +244,24 @@ export default {
         }
       });
     },
-    registerSubmit(){
-      this.$refs.RegisterForm.validate(valid=>{
-        if(valid){
-          this.$message.success('注册成功');
-          this.dialogFormVisible=false;
-        }else{
-          this.$message.error('请填写正确信息');
+    registerSubmit() {
+      this.$refs.RegisterForm.validate(valid => {
+        if (valid) {
+          this.$message.success("注册成功");
+          this.dialogFormVisible = false;
+        } else {
+          this.$message.error("请填写正确信息");
           return false;
         }
-      })
+      });
     },
     getLoginCaptcha() {
-      this.LoginCaptchaURL =process.env.VUE_APP_BASEURL + "/captcha?type=login&_t" + Date.now();
+      this.LoginCaptchaURL =
+        process.env.VUE_APP_BASEURL + "/captcha?type=login&_t" + Date.now();
     },
     getRegisterCaptcha() {
-      this.RegisterCaptchaUrl =process.env.VUE_APP_BASEURL + "/captcha?type=login&_t" + Date.now();
+      this.RegisterCaptchaUrl =
+        process.env.VUE_APP_BASEURL + "/captcha?type=sendsms&_t" + Date.now();
     },
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
