@@ -61,7 +61,7 @@
         <el-form-item label="头像" :label-width="formLabelWidth">
           <el-upload
             class="avatar-uploader"
-            action="http://127.0.0.1/heimamm/public/uploads"
+            action=''
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
@@ -84,21 +84,21 @@
         </el-form-item>
         <el-form-item label="图形码" :label-width="formLabelWidth" prop="picCode">
           <el-row class="row">
-            <el-col :span="17">
+            <el-col :span="16">
               <el-input v-model="registerForm.picCode" autocomplete="off"></el-input>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="7" :offset="1">
               <img class="pic_code" :src="RegisterCaptchaUrl" @click="getRegisterCaptcha" />
             </el-col>
           </el-row>
         </el-form-item>
         <el-form-item label="验证码" :label-width="formLabelWidth" prop="captcha">
           <el-row class="row">
-            <el-col :span="17">
+            <el-col :span="16">
               <el-input v-model="registerForm.captcha" autocomplete="off"></el-input>
             </el-col>
-            <el-col :span="6" :offset="1">
-              <el-button class="num_captcha">获取用户验证码</el-button>
+            <el-col :span="7" :offset="1"> 
+              <el-button :disabled="time!=0" class="num_captcha" @click="getMsCaptcha">{{time == 0?`获取短信验证码`:`(${time})后获取`}}</el-button>
             </el-col>
           </el-row>
         </el-form-item>
@@ -204,6 +204,7 @@ export default {
           { min: 4, max: 4, message: "验证码长度为4", trigger: "change" }
         ]
       },
+      time:0,
       imageUrl: "",
       dialogFormVisible: false,
       formLabelWidth: "70px",
@@ -262,6 +263,39 @@ export default {
     getRegisterCaptcha() {
       this.RegisterCaptchaUrl =
         process.env.VUE_APP_BASEURL + "/captcha?type=sendsms&_t" + Date.now();
+    },
+    getMsCaptcha() {
+      const reg = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
+      if (!reg.test(this.registerForm.phone)) {
+        this.$message.error("请输入正确手机号");
+      } else if ( this.registerForm.picCode == "" || this.registerForm.picCode.length == 0) {
+        this.$message.error("请输入图形验证码");
+      } else {
+        //获取短信验证码
+        axios({
+          url: `${process.env.VUE_APP_BASEURL}/sendsms`,
+          method: "post",
+          withCredentials: true,
+          data: {
+            code: this.registerForm.picCode,
+            phone: this.registerForm.phone
+          }
+        }).then(res => {
+          if (res.data.code == 200) {
+            this.$message.success(`验证码:${res.data.data.captcha}`);
+            this.time = 60;
+            var timeID = setInterval(()=>{
+              this.time--;
+              if(this.time == 0){
+                clearInterval(timeID);
+              }
+            },100);
+          } else {
+            this.$message.warning(res.data.message);
+          }
+          // window.console.log(res);
+        });
+      }
     },
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
