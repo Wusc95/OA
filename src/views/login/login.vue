@@ -61,7 +61,8 @@
         <el-form-item label="头像" :label-width="formLabelWidth">
           <el-upload
             class="avatar-uploader"
-            action=''
+            action="http://127.0.0.1/heimamm/public/uploads"
+            name="image"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
@@ -70,8 +71,8 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="昵称" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="registerForm.name" autocomplete="off"></el-input>
+        <el-form-item label="昵称" :label-width="formLabelWidth" prop="username">
+          <el-input v-model="registerForm.username" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
           <el-input v-model="registerForm.email" autocomplete="off"></el-input>
@@ -92,13 +93,17 @@
             </el-col>
           </el-row>
         </el-form-item>
-        <el-form-item label="验证码" :label-width="formLabelWidth" prop="captcha">
+        <el-form-item label="验证码" :label-width="formLabelWidth" prop="rcode">
           <el-row class="row">
             <el-col :span="16">
-              <el-input v-model="registerForm.captcha" autocomplete="off"></el-input>
+              <el-input v-model="registerForm.rcode" autocomplete="off"></el-input>
             </el-col>
-            <el-col :span="7" :offset="1"> 
-              <el-button :disabled="time!=0" class="num_captcha" @click="getMsCaptcha">{{time == 0?`获取短信验证码`:`(${time})后获取`}}</el-button>
+            <el-col :span="7" :offset="1">
+              <el-button
+                :disabled="time!=0"
+                class="num_captcha"
+                @click="getMsCaptcha"
+              >{{time == 0?`获取短信验证码`:`(${time})后获取`}}</el-button>
             </el-col>
           </el-row>
         </el-form-item>
@@ -112,7 +117,8 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
+import { login, register, getsmsCode } from "../../api/login.js";
 export default {
   data() {
     //登陆验证逻辑
@@ -167,19 +173,27 @@ export default {
         ]
       },
       registerForm: {
-        name: "",
+        //用户名
+        username: "",
+        //邮箱
         email: "",
+        //手机号
         phone: "",
+        //密码
         password: "",
+        //图形验证码
         picCode: "",
-        captcha: ""
+        //验证码
+        rcode: "",
+        //头像
+        avatar: ""
       },
       registerRules: {
         phone: [{ required: true, validator: checkPhone, trigger: "blur" }],
-        name: [
+        username: [
           { required: true, message: "请输入昵称", trigger: "blur" },
           {
-            min: 3,
+            min: 2,
             max: 12,
             message: "长度在 6 到 12 个字符",
             trigger: "change"
@@ -199,12 +213,12 @@ export default {
           { required: true, message: "请输入图形码", trigger: "blur" },
           { min: 4, max: 4, message: "图形码长度为4", trigger: "change" }
         ],
-        captcha: [
+        rcode: [
           { required: true, message: "请输入验证码", trigger: "blur" },
           { min: 4, max: 4, message: "验证码长度为4", trigger: "change" }
         ]
       },
-      time:0,
+      time: 0,
       imageUrl: "",
       dialogFormVisible: false,
       formLabelWidth: "70px",
@@ -215,21 +229,28 @@ export default {
     };
   },
   methods: {
+    //登录按钮事件
     submitForm() {
       this.$refs.form.validate(valid => {
         if (this.form.checked == true) {
           if (valid) {
-            axios({
-              url: process.env.VUE_APP_BASEURL + "/login",
-              method: "post",
-              withCredentials: true,
-              data: {
-                phone: this.form.tel,
-                password: this.form.password,
-                code: this.form.captcha
-              }
+            // axios({
+            //   url: process.env.VUE_APP_BASEURL + "/login",
+            //   method: "post",
+            //   withCredentials: true,
+            //   data: {
+            //     phone: this.form.tel,
+            //     password: this.form.password,
+            //     code: this.form.captcha
+            //   }
+            // })
+            //这里使用封装的api
+            login({
+              phone: this.form.tel,
+              password: this.form.password,
+              code: this.form.captcha
             }).then(res => {
-              window.console.log(res);
+              // window.console.log(res);
               //调用接口返回处理结果
               if (res.data.code == 200) {
                 this.$message.success("登陆成功");
@@ -245,51 +266,92 @@ export default {
         }
       });
     },
+    //注册按钮事件
     registerSubmit() {
       this.$refs.RegisterForm.validate(valid => {
         if (valid) {
-          this.$message.success("注册成功");
-          this.dialogFormVisible = false;
+          // this.$message.success("注册成功");
+          //验证通过，调用注册接口
+          // axios({
+          //   url: `${process.env.VUE_APP_BASEURL}/register`,
+          //   method: "post",
+          //   data: {
+          //     username: this.registerForm.username,
+          //     email: this.registerForm.email,
+          //     phone: this.registerForm.phone,
+          //     password: this.registerForm.password,
+          //     rcode: this.registerForm.rcode,
+          //     avatar: this.registerForm.avatar
+          //   }
+          // })
+          register({
+            username: this.registerForm.username,
+            email: this.registerForm.email,
+            phone: this.registerForm.phone,
+            password: this.registerForm.password,
+            rcode: this.registerForm.rcode,
+            avatar: this.registerForm.avatar
+          }).then(res => {
+            if (res.data.code == 200) {
+              this.$message.success("注册成功");
+              this.dialogFormVisible = false;
+              this.$refs.RegisterForm.resetFields();
+              this.imageUrl = "";
+            } else {
+              return this.$message.warning(res.data.message);
+            }
+            window.console.log(res);
+          });
         } else {
           this.$message.error("请填写正确信息");
           return false;
         }
       });
     },
+    //获取登录图形验证码
     getLoginCaptcha() {
       this.LoginCaptchaURL =
         process.env.VUE_APP_BASEURL + "/captcha?type=login&_t" + Date.now();
     },
+    //获取注册图形验证码
     getRegisterCaptcha() {
       this.RegisterCaptchaUrl =
         process.env.VUE_APP_BASEURL + "/captcha?type=sendsms&_t" + Date.now();
     },
+    //获取短信验证码
     getMsCaptcha() {
       const reg = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
       if (!reg.test(this.registerForm.phone)) {
         this.$message.error("请输入正确手机号");
-      } else if ( this.registerForm.picCode == "" || this.registerForm.picCode.length == 0) {
+      } else if (
+        this.registerForm.picCode == "" ||
+        this.registerForm.picCode.length == 0
+      ) {
         this.$message.error("请输入图形验证码");
       } else {
         //获取短信验证码
-        axios({
-          url: `${process.env.VUE_APP_BASEURL}/sendsms`,
-          method: "post",
-          withCredentials: true,
-          data: {
-            code: this.registerForm.picCode,
-            phone: this.registerForm.phone
-          }
+        // axios({
+        //   url: `${process.env.VUE_APP_BASEURL}/sendsms`,
+        //   method: "post",
+        //   withCredentials: true,
+        //   data: {
+        //     code: this.registerForm.picCode,
+        //     phone: this.registerForm.phone
+        //   }
+        // })
+        getsmsCode({
+          code: this.registerForm.picCode,
+          phone: this.registerForm.phone
         }).then(res => {
           if (res.data.code == 200) {
             this.$message.success(`验证码:${res.data.data.captcha}`);
             this.time = 60;
-            var timeID = setInterval(()=>{
+            var timeID = setInterval(() => {
               this.time--;
-              if(this.time == 0){
+              if (this.time == 0) {
                 clearInterval(timeID);
               }
-            },100);
+            }, 100);
           } else {
             this.$message.warning(res.data.message);
           }
@@ -297,9 +359,10 @@ export default {
         });
       }
     },
+    //头像上传成功后执行的函数
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
-      window.console.log(URL.createObjectURL(file.raw));
+      this.registerForm.avatar = res.data.file_path;
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg" || file.type === "image/png";
