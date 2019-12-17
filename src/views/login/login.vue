@@ -251,7 +251,7 @@ export default {
               password: this.form.password,
               code: this.form.captcha
             }).then(res => {
-              window.console.log(res);
+              // window.console.log(res);
               //调用接口返回处理结果
               if (res.data.code == 200) {
                 // localStorage.setItem( 'token',`${res.data.data.token}`);

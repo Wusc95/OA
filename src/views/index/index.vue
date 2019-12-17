@@ -8,8 +8,8 @@
         <p>黑马面面</p>
       </div>
       <div class="right">
-        <img src="../../assets/png-0018.png" alt />
-        <p>利达，您好</p>
+        <img :src="userInfo.avatar" alt />
+        <p>{{userInfo.username}}，您好</p>
         <el-button type="primary" size="small" class="out">退出</el-button>
       </div>
     </el-header>
@@ -49,11 +49,13 @@
 
 <script>
 // import axios from 'axios'
-import {getToken} from"../../utils/token.js"
+import {getToken,removeToken} from"../../utils/token.js"
+import {userInnfo} from"../../api/user.js"
 export default {
   data() {
     return {
-      isCollapse: false
+      isCollapse: false,
+      userInfo:''
     }
   },
   methods: {
@@ -67,6 +69,20 @@ export default {
       this.$message.warning('用户未登录，请先登录');
       this.$router.push('/login')
     }
+  },
+  created() {
+    //进入页面，获取用户信息
+    userInnfo().then(res=>{
+      // window.console.log(res);
+      if(res.data.code == 200){
+        res.data.data.avatar = `${process.env.VUE_APP_BASEURL}/${res.data.data.avatar}`
+        this.userInfo = res.data.data;
+      }else if(res.data.code == 206){
+        this.$message.error('小样，就知道你会改token,滚犊子');
+        removeToken();
+        this.$router.push('/login');
+      }
+    });
   },
  
 };
@@ -134,7 +150,7 @@ body > .el-container {
         border-radius: 50%;
       }
       p {
-        width: 80px;
+        // width: 100px;
         margin-left: 19px;
         margin-right: 9px;
         font-size: 14px;
