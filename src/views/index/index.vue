@@ -16,7 +16,7 @@
     <el-container>
       <!-- 左侧 -->
       <el-aside class="aside" width="auto">
-        <el-menu default-active="/index/chart" class="el-menu-vertical-demo list-show" @open="handleOpen" @close="handleClose" router :collapse="isCollapse">
+        <el-menu :default-active="$route.path" class="el-menu-vertical-demo list-show" @open="handleOpen" @close="handleClose" router :collapse="isCollapse">
           <el-menu-item index="/index/chart">
             <i class="el-icon-pie-chart"></i>
             <span slot="title">数据概览</span>
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+// import axios from 'axios'
 export default {
   data() {
     return {
@@ -55,16 +56,8 @@ export default {
     }
   },
   methods: {
-    handleOpen(key, keyPath) {
-      window.console.log(key, keyPath);
-    },
-    handleClose(key, keyPath) {
-      window.console.log(key, keyPath);
-    },
-    handleSelect(index, indexPath) {
-      window.console.log(index);
-      window.console.log(indexPath);
-    }
+    //进入页面，获取用户信息
+    
   }
 };
 </script>
