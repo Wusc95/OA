@@ -250,11 +250,14 @@ export default {
               password: this.form.password,
               code: this.form.captcha
             }).then(res => {
-              // window.console.log(res);
+              window.console.log(res);
               //调用接口返回处理结果
               if (res.data.code == 200) {
-                this.$message.success("登陆成功");
+                localStorage.setItem( 'token',`${res.data.data.token}`);
                 this.$router.push("/index");
+                this.$message.success("登陆成功");
+              }else{
+                this.$message.warning(`${res.data.message}`);
               }
             });
           } else {
