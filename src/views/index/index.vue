@@ -49,16 +49,26 @@
 
 <script>
 // import axios from 'axios'
+import {getToken} from"../../utils/token.js"
 export default {
   data() {
     return {
-      isCollapse: true
+      isCollapse: false
     }
   },
   methods: {
     //进入页面，获取用户信息
     
-  }
+  },
+  beforeCreate() {
+    //采用这种方法，如果网速较差的话会出现闪的现象
+    //解决办法，尽可能的早判断
+    if(!getToken()){
+      this.$message.warning('用户未登录，请先登录');
+      this.$router.push('/login')
+    }
+  },
+ 
 };
 </script>
 <style lang='less'>

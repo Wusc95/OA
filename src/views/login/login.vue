@@ -119,6 +119,7 @@
 <script>
 // import axios from "axios";
 import { login, register, getsmsCode } from "../../api/login.js";
+import {setToken} from"../../utils/token.js";
 export default {
   data() {
     //登陆验证逻辑
@@ -253,7 +254,8 @@ export default {
               window.console.log(res);
               //调用接口返回处理结果
               if (res.data.code == 200) {
-                localStorage.setItem( 'token',`${res.data.data.token}`);
+                // localStorage.setItem( 'token',`${res.data.data.token}`);
+                setToken(res.data.data.token);
                 this.$router.push("/index");
                 this.$message.success("登陆成功");
               }else{
