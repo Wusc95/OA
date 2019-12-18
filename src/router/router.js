@@ -14,11 +14,14 @@ import {
     Message
 } from 'element-ui'
 
-//导入获取token的方法
+//导入token的方法
 import {
-    getToken
+    getToken,removeToken
 } from '../utils/token'
-
+//导入获取用户信息的方法
+import {
+    userInnfo
+} from '../api/user.js'
 // 导入 vue-router
 import VueRouter from 'vue-router'
 //注册 vue-router
@@ -72,8 +75,17 @@ router.beforeEach((to, from, next) => {
         if (!getToken()) {
             Message.error('用户未登录，请先登录');
             next('/login');
-        }else{
-            next();
+        } else {
+            userInnfo().then(res => {
+                window.console.log(res);
+                if (res.data.code == 200) {
+                    next();
+                }else if(res.data.code == 206){
+                    Message.error('就你，还伪造token,滚犊子');
+                    removeToken();
+                    next('/login');
+                }
+            })
         }
     }
 
