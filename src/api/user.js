@@ -15,3 +15,13 @@ export const userInnfo=()=>{
         }
     });
 }
+
+export const userLogout=()=>{
+    return instance({
+        url:'/logout',
+        method:'get',
+        headers:{
+            token:getToken()
+        }
+    });
+}

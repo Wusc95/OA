@@ -10,13 +10,18 @@
       <div class="right">
         <img :src="$store.state.userInfo.avatar" alt />
         <p>{{$store.state.userInfo.username}}，您好</p>
-        <el-button type="primary" size="small" class="out">退出</el-button>
+        <el-button type="primary" size="small" class="out" @click="logout">退出</el-button>
       </div>
     </el-header>
     <el-container>
       <!-- 左侧 -->
       <el-aside class="aside" width="auto">
-        <el-menu :default-active="$route.path" class="el-menu-vertical-demo list-show" router :collapse="isCollapse">
+        <el-menu
+          :default-active="$route.path"
+          class="el-menu-vertical-demo list-show"
+          router
+          :collapse="isCollapse"
+        >
           <el-menu-item index="/index/chart">
             <i class="el-icon-pie-chart"></i>
             <span slot="title">数据概览</span>
@@ -51,15 +56,39 @@
 // import axios from 'axios'
 // import {getToken,removeToken} from"../../utils/token.js"
 // import {userInnfo} from"../../api/user.js"
+import { userLogout } from "../../api/user";
+import { removeToken } from "../../utils/token.js";
 export default {
   data() {
     return {
-      isCollapse: false,
-    }
+      isCollapse: false
+    };
   },
   methods: {
-    //进入页面，获取用户信息
-    
+    logout() {
+      // userLogout().then(res=>{
+      //   window.console.log(res);
+      // });
+      this.$confirm("确认退出", "友情提示:", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          userLogout().then(res => {
+            window.console.log(res);
+            if (res.data.code == 200) {
+              removeToken();
+              this.$store.state.userInfo = {};
+              this.$router.push("./login");
+              this.$message({ type: "success", message: "已退出!" });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({ type: "info", message: "取消退出" });
+        });
+    }
   },
   // beforeCreate() {
   //   //采用这种方法，如果网速较差的话会出现闪的现象
@@ -82,8 +111,7 @@ export default {
     //     this.$router.push('/login');
     //   }
     // });
-  },
- 
+  }
 };
 </script>
 <style lang='less'>
@@ -110,9 +138,9 @@ body > .el-container {
 }
 
 .el-menu-vertical-demo:not(.el-menu--collapse) {
-    width: 200px;
-    min-height: 400px;
-  }
+  width: 200px;
+  min-height: 400px;
+}
 
 /*************************************************************************************** */
 .main-layout {
