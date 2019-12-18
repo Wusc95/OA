@@ -66,7 +66,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     //路由白名单
     const whitePath = ['/login', '/'];
-    if (whitePath.includes(to.path) === true) {
+    if (whitePath.includes(to.path.toLocaleLowerCase()) === true) {
         next();
     } else {
         if (!getToken()) {
