@@ -49,8 +49,8 @@
 
 <script>
 // import axios from 'axios'
-import {getToken,removeToken} from"../../utils/token.js"
-import {userInnfo} from"../../api/user.js"
+// import {getToken,removeToken} from"../../utils/token.js"
+// import {userInnfo} from"../../api/user.js"
 export default {
   data() {
     return {
@@ -62,27 +62,27 @@ export default {
     //进入页面，获取用户信息
     
   },
-  beforeCreate() {
-    //采用这种方法，如果网速较差的话会出现闪的现象
-    //解决办法，尽可能的早判断
-    if(!getToken()){
-      this.$message.warning('用户未登录，请先登录');
-      this.$router.push('/login')
-    }
-  },
+  // beforeCreate() {
+  //   //采用这种方法，如果网速较差的话会出现闪的现象
+  //   //解决办法，尽可能的早判断
+  //   if(!getToken()){
+  //     this.$message.warning('用户未登录，请先登录');
+  //     this.$router.push('/login')
+  //   }
+  // },
   created() {
     //进入页面，获取用户信息
-    userInnfo().then(res=>{
-      // window.console.log(res);
-      if(res.data.code == 200){
-        res.data.data.avatar = `${process.env.VUE_APP_BASEURL}/${res.data.data.avatar}`
-        this.userInfo = res.data.data;
-      }else if(res.data.code == 206){
-        this.$message.error('小样，就知道你会改token,滚犊子');
-        removeToken();
-        this.$router.push('/login');
-      }
-    });
+    // userInnfo().then(res=>{
+    //   // window.console.log(res);
+    //   if(res.data.code == 200){
+    //     res.data.data.avatar = `${process.env.VUE_APP_BASEURL}/${res.data.data.avatar}`
+    //     this.userInfo = res.data.data;
+    //   }else if(res.data.code == 206){
+    //     this.$message.error('小样，就知道你会改token,滚犊子');
+    //     removeToken();
+    //     this.$router.push('/login');
+    //   }
+    // });
   },
  
 };
