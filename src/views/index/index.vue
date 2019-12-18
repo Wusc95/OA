@@ -8,8 +8,8 @@
         <p>黑马面面</p>
       </div>
       <div class="right">
-        <img :src="userInfo.avatar" alt />
-        <p>{{userInfo.username}}，您好</p>
+        <img :src="$store.state.userInfo.avatar" alt />
+        <p>{{$store.state.userInfo.username}}，您好</p>
         <el-button type="primary" size="small" class="out">退出</el-button>
       </div>
     </el-header>
@@ -55,7 +55,6 @@ export default {
   data() {
     return {
       isCollapse: false,
-      userInfo:''
     }
   },
   methods: {

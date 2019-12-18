@@ -8,7 +8,8 @@ import subject from '../views/index/subject/subject.vue';
 import question from '../views/index/question/question.vue';
 import enterprise from '../views/index/enterprise/enterprise.vue';
 import chart from '../views/index/chart/chart.vue';
-
+//导入store(vuex)
+import store from'../store/store.js'
 //导入提示框
 import {
     Message
@@ -77,8 +78,10 @@ router.beforeEach((to, from, next) => {
             next('/login');
         } else {
             userInnfo().then(res => {
-                window.console.log(res);
+                // window.console.log(res);
                 if (res.data.code == 200) {
+                    store.state.userInfo=res.data.data;
+                    store.state.userInfo.avatar=`${process.env.VUE_APP_BASEURL}/${store.state.userInfo.avatar}`
                     next();
                 }else if(res.data.code == 206){
                     Message.error('就你，还伪造token,滚犊子');

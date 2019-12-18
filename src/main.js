@@ -8,6 +8,8 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 //引入vue-router
 import router from './router/router.js'
+//导入vuex仓库
+import store from'./store/store.js'
 //注册
 Vue.use(ElementUI);
 
@@ -16,5 +18,6 @@ Vue.config.productionTip = false;
 
 new Vue({
   router,
+  store,
   render: h => h(App),
 }).$mount('#app')
