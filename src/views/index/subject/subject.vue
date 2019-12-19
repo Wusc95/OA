@@ -20,7 +20,7 @@
         <el-form-item>
           <el-button type="primary" @click="onSubmit">搜索</el-button>
           <el-button @click="onSubmit">清除</el-button>
-          <el-button type="primary" @click="dialogFormVisible=!dialogFormVisible">+新增学科</el-button>
+          <el-button type="primary" @click="dialogFormVisible=!dialogFormVisible" icon="el-icon-plus">新增学科</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -46,7 +46,8 @@
       ></el-pagination>
     </el-card>
     <!--新增学科录入框-->
-    <el-dialog title="新增学科" :visible.sync="dialogFormVisible">
+    <addDialog></addDialog>
+    <!-- <el-dialog title="新增学科" :visible.sync="dialogFormVisible">
       <el-form :model="addForm" :rules="rules" ref="addForm">
         <el-form-item label="学科编号" :label-width="formLabelWidth" prop="rid">
           <el-input v-model="addForm.rid" autocomplete="off"></el-input>
@@ -68,14 +69,16 @@
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="addDiscipline">确 定</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
 <script>
+//导入新增学科对话组件
+import addDialog  from "./components/addDialog.vue"
 // import axios from "axios";
 // import { getToken } from "../../../utils/token";
-import { addDiscipline, getSubjectList } from "../../../api/subject.js";
+import {getSubjectList } from "../../../api/subject.js";
 export default {
   data() {
     return {
@@ -86,22 +89,12 @@ export default {
       },
       //新增对话框是否显示
       dialogFormVisible: false,
-      //新增对话框表单
-      addForm: {
-        rid: "",
-        name: "",
-        short_name: "",
-        intro: "",
-        remark: ""
-      },
+      
       //学科列表
       subjectList: [],
-      formLabelWidth: "85px",
-      //新增学科表单验证规则
-      rules: {
-        name: [{ required: true, message: "请输入学科名称", trigger: "blur" }],
-        rid: [{ required: true, message: "请输入学科编号", trigger: "blur" }]
-      },
+      
+      
+      //分页
       currentPage1: 5,
       currentPage2: 5,
       currentPage3: 5,
@@ -112,37 +105,7 @@ export default {
     onSubmit() {
       window.console.log("submit!");
     },
-    //添加学科
-    addDiscipline() {
-      // axios({
-      //   url:process.env.VUE_APP_BASEURL+'/subject/add',
-      //   method:'post',
-      //   headers:{
-      //     token:getToken()
-      //   },
-      //   data:{
-      //     rid:this.addForm.rid,
-      //     name:this.addForm.name,
-      //     short_name:this.addForm.short_name,
-      //     intro:this.addForm.intro,
-      //     remark:this.addForm.remark
-      //   }
-      // })
-      addDiscipline({
-        rid: this.addForm.rid,
-        name: this.addForm.name,
-        short_name: this.addForm.short_name,
-        intro: this.addForm.intro,
-        remark: this.addForm.remark
-      }).then(res => {
-        if (res.data.code == 200) {
-          this.$message.success("添加成功");
-          this.dialogFormVisible = false;
-          this.getSubjectList();
-        }
-        window.console.log(res);
-      });
-    },
+
     //获取学科列表
     getSubjectList() {
       // axios({
@@ -179,6 +142,10 @@ export default {
       window.console.log(`当前页: ${val}`);
     }
   },
+  //注册组件
+  components:{
+    addDialog
+  },
   created() {
     this.getSubjectList();
   }
@@ -196,32 +163,6 @@ export default {
     margin-top: 19px;
     text-align: center;
   }
-  //新增学科对话框样式
-  .el-dialog {
-    width: 603px;
-    height: 500px;
-    .el-dialog__header {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(
-        to right,
-        rgba(20, 147, 250, 1),
-        rgba(1, 198, 250, 1)
-      );
-      .el-dialog__headerbtn {
-        display: none;
-      }
-      span {
-        font-size: 18px;
-        font-family: Microsoft YaHei;
-        font-weight: bold;
-        color: rgba(255, 255, 255, 1);
-      }
-    }
-    .el-dialog__footer {
-      text-align: center;
-    }
-  }
+
 }
 </style>
