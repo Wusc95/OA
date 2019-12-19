@@ -9,7 +9,7 @@ import question from '../views/index/question/question.vue';
 import enterprise from '../views/index/enterprise/enterprise.vue';
 import chart from '../views/index/chart/chart.vue';
 //导入store(vuex)
-import store from'../store/store.js'
+import store from '../store/store.js'
 //导入提示框
 import {
     Message
@@ -17,7 +17,8 @@ import {
 
 //导入token的方法
 import {
-    getToken,removeToken
+    getToken,
+    removeToken
 } from '../utils/token'
 //导入获取用户信息的方法
 import {
@@ -80,10 +81,12 @@ router.beforeEach((to, from, next) => {
             userInnfo().then(res => {
                 // window.console.log(res);
                 if (res.data.code == 200) {
-                    store.state.userInfo=res.data.data;
-                    store.state.userInfo.avatar=`${process.env.VUE_APP_BASEURL}/${store.state.userInfo.avatar}`
+                    // store.state.userInfo = res.data.data;
+                    // store.state.userInfo.avatar = `${process.env.VUE_APP_BASEURL}/${store.state.userInfo.avatar}`
+                    res.data.data.avatar = process.env.VUE_APP_BASEURL+'/'+res.data.data.avatar;
+                    store.commit('changeUserInfo',res.data.data);
                     next();
-                }else if(res.data.code == 206){
+                } else if (res.data.code == 206) {
                     Message.error('就你，还伪造token,滚犊子');
                     removeToken();
                     next('/login');
