@@ -1,43 +1,43 @@
 <template>
-  <el-dialog title="新增学科" :visible.sync="$parent.addDialogFormVisible">
-    <el-form :model="addForm" :rules="rules" ref="addForm">
+  <el-dialog title="修改学科" :visible.sync="$parent.editDialogFormVisible">
+    <el-form :model="editForm" :rules="rules" ref="editForm"> 
       <el-form-item label="学科编号" :label-width="formLabelWidth" prop="rid">
-        <el-input v-model="addForm.rid" autocomplete="off"></el-input>
+        <el-input v-model="editForm.rid" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="学科名称" :label-width="formLabelWidth" prop="name">
-        <el-input v-model="addForm.name" autocomplete="off"></el-input>
+        <el-input v-model="editForm.name" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="学科简称" :label-width="formLabelWidth">
-        <el-input v-model="addForm.short_name" autocomplete="off"></el-input>
+        <el-input v-model="editForm.short_name" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="学科简介" :label-width="formLabelWidth">
-        <el-input v-model="addForm.intro" autocomplete="off"></el-input>
+        <el-input v-model="editForm.intro" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="学科备注" :label-width="formLabelWidth">
-        <el-input v-model="addForm.remark" autocomplete="off"></el-input>
+        <el-input v-model="editForm.remark" autocomplete="off"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="$parent.addDialogFormVisible = false">取 消</el-button>
-      <el-button type="primary" @click="addDiscipline">确 定</el-button>
+      <el-button @click="$parent.editDialogFormVisible = false">取 消</el-button>
+      <el-button type="primary" @click="subjectEdit">确 定</el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
-import { addDiscipline } from "../../../../api/subject.js";
+import { subjectEdit } from "../../../../api/subject.js";
 export default {
   data() {
     return {
-      //新增对话框表单
-      addForm: {
+      //编辑学科对话框表单
+      editForm: {
         rid: "",
         name: "",
         short_name: "",
         intro: "",
         remark: ""
       },
-      //新增学科表单验证规则
+      //编辑学科学科表单验证规则
       rules: {
         name: [{ required: true, message: "请输入学科名称", trigger: "blur" }],
         rid: [{ required: true, message: "请输入学科编号", trigger: "blur" }]
@@ -46,23 +46,19 @@ export default {
     };
   },
   methods: {
-    //添加学科
-    addDiscipline() {
-      this.$refs.addForm.validate(valid => {
+    //编辑学科
+    subjectEdit() {
+      this.$refs.editForm.validate(valid => {
         if (valid) {
-          addDiscipline({
-            rid: this.addForm.rid,
-            name: this.addForm.name,
-            short_name: this.addForm.short_name,
-            intro: this.addForm.intro,
-            remark: this.addForm.remark
+          subjectEdit({
+            ...this.editForm
           }).then(res => {
             if (res.data.code == 200) {
-              this.$message.success("添加成功");
-              this.$parent.addDialogFormVisible = false;
+              this.$message.success("修改成功");
+              this.$parent.editDialogFormVisible = false;
               this.$parent.getSubjectList();
             }else if(res.data.code == 201){
-              this.$message.error('添加失败，该学科编号已存在');
+              this.$message.error('修改失败，该学科编号已存在');
             }
             window.console.log(res);
           });
@@ -77,7 +73,7 @@ export default {
 </script>
 
 <style lang='less'>
-//新增学科对话框样式
+//编辑学科学科对话框样式
 .el-dialog {
   width: 603px;
   height: 500px;
