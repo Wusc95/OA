@@ -125,7 +125,7 @@ export default {
       //页码
       page: 1,
       //每页多少数据
-      limit: 2,
+      limit: 6,
       //总条数
       total:0,
       //选择显示多少条
@@ -231,6 +231,9 @@ export default {
   .subject-body {
     margin-top: 19px;
     text-align: center;
+    .el-pagination {
+      margin-top: 30px;
+    }
   }
 }
 </style>

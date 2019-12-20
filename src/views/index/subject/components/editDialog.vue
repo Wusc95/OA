@@ -1,6 +1,6 @@
 <template>
   <el-dialog title="修改学科" :visible.sync="$parent.editDialogFormVisible">
-    <el-form :model="editForm" :rules="rules" ref="editForm"> 
+    <el-form :model="editForm" :rules="rules" ref="editForm">
       <el-form-item label="学科编号" :label-width="formLabelWidth" prop="rid">
         <el-input v-model="editForm.rid" autocomplete="off"></el-input>
       </el-form-item>
@@ -57,8 +57,8 @@ export default {
               this.$message.success("修改成功");
               this.$parent.editDialogFormVisible = false;
               this.$parent.getSubjectList();
-            }else if(res.data.code == 201){
-              this.$message.error('修改失败，该学科编号已存在');
+            } else if (res.data.code == 201) {
+              this.$message.error("修改失败，该学科编号已存在");
             }
             window.console.log(res);
           });
@@ -87,7 +87,10 @@ export default {
       rgba(1, 198, 250, 1)
     );
     .el-dialog__headerbtn {
-      display: none;
+      display: block;
+      i {
+        color: wheat;
+      }
     }
     span {
       font-size: 18px;
