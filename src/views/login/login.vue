@@ -119,7 +119,7 @@
 <script>
 // import axios from "axios";
 import { login, register, getsmsCode } from "../../api/login.js";
-import {setToken} from"../../utils/token.js";
+import { setToken } from "../../utils/token.js";
 export default {
   data() {
     //登陆验证逻辑
@@ -258,7 +258,7 @@ export default {
                 setToken(res.data.data.token);
                 this.$router.push("/index");
                 this.$message.success("登陆成功");
-              }else{
+              } else {
                 this.$message.warning(`${res.data.message}`);
               }
             });
