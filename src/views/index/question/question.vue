@@ -76,17 +76,18 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage4"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
+        :current-page="page"
+        :page-sizes="pageSizes"
+        :page-size="limit"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
+        :total="total"
       ></el-pagination>
     </el-card>
   </div>
 </template>
 
 <script>
+import {questionList} from '../../../api/question.js'
 export default {
   data() {
     return {
@@ -94,21 +95,39 @@ export default {
         user: "",
         region: ""
       },
+      //数据
       tableData: [],
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
-      currentPage4: 4
+      //数据总条数
+      total:0,
+      //选择每页显示多少
+      pageSizes:[2,4,6,8,10],
+      //页码
+      page:1,
+      //每页显示多少数据
+      limit:6,
     };
   },
   methods: {
+    //获取数据
+    getQuestionList(){
+      questionList().then(res=>{
+        window.console.log(res);
+        if(res.data.code == 200){
+          this.tableData = res.data.data.items;
+          this.total=res.data.data.pagination.total;
+        }
+      });
+    },
     handleSizeChange(val) {
       window.console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
       window.console.log(`当前页: ${val}`);
     }
-  }
+  },
+  created() {
+    this.getQuestionList();
+  },
 };
 </script>
 

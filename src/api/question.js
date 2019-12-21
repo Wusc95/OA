@@ -1,7 +1,7 @@
 import instance from "../utils/request.js"
 
 //编辑题目
-const questionEdit = (data)=>{
+export const questionEdit = (data)=>{
     return instance({
         url:'/question/edit',
         method:'post',
@@ -9,7 +9,7 @@ const questionEdit = (data)=>{
     });
 }
 //题目列表
-const questionList = (params)=>{
+export const questionList = (params)=>{
     return instance({
         url:'/question/list',
         method:'get',
@@ -17,7 +17,7 @@ const questionList = (params)=>{
     });
 }
 //删除题目
-const questionRemove = (data)=>{
+export const questionRemove = (data)=>{
     return instance({
         url:'/question/remove',
         method:'post',
@@ -25,7 +25,7 @@ const questionRemove = (data)=>{
     });
 }
 //设置题目状态
-const questionStatus = (data)=>{
+export const questionStatus = (data)=>{
     return instance({
         url:'/question/status',
         method:'post',
@@ -33,7 +33,7 @@ const questionStatus = (data)=>{
     });
 }
 //发布题目
-const questionAdd = (data)=>{
+export const questionAdd = (data)=>{
     return instance({
         url:'/question/add',
         method:'post',
@@ -41,7 +41,7 @@ const questionAdd = (data)=>{
     });
 }
 //上传文件
-const questionUpload = (data)=>{
+export const questionUpload = (data)=>{
     return instance({
         url:'/question/upload',
         method:'post',
@@ -49,7 +49,7 @@ const questionUpload = (data)=>{
     });
 }
 //获取题目信息
-const questionOne = (data)=>{
+export const questionOne = (data)=>{
     return instance({
         url:'/question/one',
         method:'post',
