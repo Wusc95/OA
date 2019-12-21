@@ -110,7 +110,10 @@ export default {
   methods: {
     //获取数据
     getQuestionList(){
-      questionList().then(res=>{
+      questionList({
+        limit:this.limit,
+        page:this.page
+      }).then(res=>{
         window.console.log(res);
         if(res.data.code == 200){
           this.tableData = res.data.data.items;
@@ -118,11 +121,17 @@ export default {
         }
       });
     },
-    handleSizeChange(val) {
-      window.console.log(`每页 ${val} 条`);
+    // 页容量改变
+    handleSizeChange(limit) {
+      // window.console.log(`每页 ${limit} 条`);
+      this.limit = limit;
+      this.getQuestionList();
     },
-    handleCurrentChange(val) {
-      window.console.log(`当前页: ${val}`);
+    // 页码改变
+    handleCurrentChange(page) {
+      // window.console.log(`当前页: ${page}`);
+      this.page=page;
+      this.getQuestionList();
     }
   },
   created() {
