@@ -27,6 +27,7 @@
 <script>
 import { enterpriseAdd } from "../../../../api/enterprise.js";
 export default {
+  name:'addEnterpriseForm',
   data() {
     return {
       //新增企业表单数据
@@ -59,6 +60,7 @@ export default {
                   this.$message.success('新增企业成功');
                   this.$parent.addFormVisible = false;
                   this.$parent.enterpriseList();
+                  this.addFrom={};
               }else if(res.data.code == 201){
                   this.$message.error('添加失败！ 该企业编号已存在');
               }

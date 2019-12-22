@@ -14,7 +14,6 @@ import store from '../store/store.js'
 import {
     Message
 } from 'element-ui'
-
 //导入token的方法
 import {
     getToken,
@@ -40,26 +39,49 @@ const routes = [{
     {
         path: '/index',
         component: index,
-        redirect:'index/chart',
+        // redirect: 'index/chart',
+        meta:{
+            power:['管理员','老师','学生']
+        },
         children: [{
                 path: 'user',
-                component: user
+                component: user,
+                //判断哪些用户可以去
+                meta: {
+                    power: ['管理员']
+                }
             },
             {
                 path: 'subject',
-                component: subject
+                component: subject,
+                //判断哪些用户可以去
+                meta: {
+                    power: ['管理员', '老师']
+                }
             },
             {
                 path: 'question',
-                component: question
+                component: question,
+                //判断哪些用户可以去
+                meta: {
+                    power: ['管理员', '老师', '学生']
+                }
             },
             {
                 path: 'enterprise',
-                component: enterprise
+                component: enterprise,
+                //判断哪些用户可以去
+                meta: {
+                    power: ['管理员', '老师']
+                }
             },
             {
                 path: 'chart',
-                component: chart
+                component: chart,
+                //判断哪些用户可以去
+                meta: {
+                    power: ['管理员', '老师']
+                }
             }
         ]
     }
@@ -84,9 +106,26 @@ router.beforeEach((to, from, next) => {
                 if (res.data.code == 200) {
                     // store.state.userInfo = res.data.data;
                     // store.state.userInfo.avatar = `${process.env.VUE_APP_BASEURL}/${store.state.userInfo.avatar}`
-                    res.data.data.avatar = process.env.VUE_APP_BASEURL+'/'+res.data.data.avatar;
-                    store.commit('changeUserInfo',res.data.data);
-                    next();
+                    //判断用户状态是否启用(1:启用 0:禁用),如果状态为禁用，则提示用户联系管理员
+                    if (res.data.data.status == 1) {
+
+                        res.data.data.avatar = process.env.VUE_APP_BASEURL + '/' + res.data.data.avatar;
+                        store.commit('changeUserInfo', res.data.data);
+                        //当状态为启用时，判断用户是否有权限进入到这个页面
+                        if (to.meta.power.includes(store.state.userInfo.role)) {
+                            next();
+                        }else{
+                            Message.error('您不具备访问权限，请及时联系管理员');
+                        }
+
+
+
+                    } else {
+                        Message.error('该账号已被禁用，请及时联系管理员');
+                        removeToken();
+                        next('/login');
+                    }
+
                 } else if (res.data.code == 206) {
                     Message.error('就你，还伪造token,滚犊子');
                     removeToken();
@@ -100,7 +139,7 @@ router.beforeEach((to, from, next) => {
 
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch(err => err)
+    return originalPush.call(this, location).catch(err => err)
 }
 
 export default router;

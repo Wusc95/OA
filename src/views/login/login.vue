@@ -119,7 +119,7 @@
 <script>
 // import axios from "axios";
 //导入表单验证规则
-import {checkPhone,checkEmail}  from '../../utils/validator.js'
+import { checkPhone, checkEmail } from "../../utils/validator.js";
 
 import { login, register, getsmsCode } from "../../api/login.js";
 import { setToken } from "../../utils/token.js";
@@ -255,12 +255,16 @@ export default {
               code: this.form.captcha
             }).then(res => {
               // window.console.log(res);
-              //调用接口返回处理结果
               if (res.data.code == 200) {
                 // localStorage.setItem( 'token',`${res.data.data.token}`);
                 setToken(res.data.data.token);
+                // this.$message.success("登陆成功");
                 this.$router.push("/index");
-                this.$message.success("登陆成功");
+
+                //Object.keys(Obj).length > 0   ES6语法，可以用来判断对象是否为空
+                // if (Object.keys(this.$store.state.userInfo).length > 0) {
+                //   
+                // }
               } else {
                 this.$message.warning(`${res.data.message}`);
               }

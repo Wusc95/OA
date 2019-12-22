@@ -100,6 +100,7 @@ export default {
   //   }
   // },
   created() {
+    this.$message.success('登录成功');
     //进入页面，获取用户信息
     // userInnfo().then(res=>{
     //   // window.console.log(res);
