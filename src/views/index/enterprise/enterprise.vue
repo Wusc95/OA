@@ -30,7 +30,11 @@
         <el-table-column prop="eid" label="企业编号"></el-table-column>
         <el-table-column prop="name" label="企业名称"></el-table-column>
         <el-table-column prop="username" label="创建者"></el-table-column>
-        <el-table-column prop="update_time" label="创建日期"></el-table-column>
+        <el-table-column prop="update_time" label="创建日期">
+          <template slot-scope="scope">
+              <span>{{scope.row.update_time | formatTime}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="status" label="状态">
           <template slot-scope="scope">
             <span v-if="scope.row.status == 1">启用</span>

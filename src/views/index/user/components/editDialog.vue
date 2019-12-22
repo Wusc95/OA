@@ -16,16 +16,16 @@
 
         <el-form-item label="角色" :label-width="formLabelWidth" prop="role_id">
           <el-select v-model="editForm.role_id" placeholder="请选择角色">
-            <el-option label="管理员" value="2"></el-option>
-            <el-option label="老师" value="3"></el-option>
-            <el-option label="学生" value="4"></el-option>
+            <el-option label="管理员" :value="2"></el-option>
+            <el-option label="老师" :value="3"></el-option>
+            <el-option label="学生" :value="4"></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
           <el-select v-model="editForm.status" placeholder="请选择角色">
-            <el-option label="启用" value="1"></el-option>
-            <el-option label="禁用" value="0"></el-option>
+            <el-option label="启用" :value="1"></el-option>
+            <el-option label="禁用" :value="0"></el-option>
           </el-select>
         </el-form-item>
 

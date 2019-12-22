@@ -3,7 +3,7 @@
     <el-card class="box-card user-header">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="用户名称">
-          <el-input v-model="formInline.user_name"></el-input>
+          <el-input v-model="formInline.username"></el-input>
         </el-form-item>
         <el-form-item label="用户邮箱">
           <el-input v-model="formInline.email"></el-input>
@@ -87,7 +87,7 @@ export default {
     return {
       //顶部表单
       formInline: {
-        user_name: "",
+        username: "",
         email: "",
         role_id: ""
       },

@@ -1,27 +1,29 @@
 <template>
-  <el-dialog title="新增学科" :visible.sync="$parent.addDialogFormVisible">
-    <el-form :model="addForm" :rules="rules" ref="addForm">
-      <el-form-item label="学科编号" :label-width="formLabelWidth" prop="rid">
-        <el-input v-model="addForm.rid" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="学科名称" :label-width="formLabelWidth" prop="name">
-        <el-input v-model="addForm.name" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="学科简称" :label-width="formLabelWidth">
-        <el-input v-model="addForm.short_name" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="学科简介" :label-width="formLabelWidth">
-        <el-input v-model="addForm.intro" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item label="学科备注" :label-width="formLabelWidth">
-        <el-input v-model="addForm.remark" autocomplete="off"></el-input>
-      </el-form-item>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="$parent.addDialogFormVisible = false">取 消</el-button>
-      <el-button type="primary" @click="addDiscipline">确 定</el-button>
-    </div>
-  </el-dialog>
+  <div class="addSubjectForm">
+    <el-dialog title="新增学科" :visible.sync="$parent.addDialogFormVisible">
+      <el-form :model="addForm" :rules="rules" ref="addForm">
+        <el-form-item label="学科编号" :label-width="formLabelWidth" prop="rid">
+          <el-input v-model="addForm.rid" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="学科名称" :label-width="formLabelWidth" prop="name">
+          <el-input v-model="addForm.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="学科简称" :label-width="formLabelWidth">
+          <el-input v-model="addForm.short_name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="学科简介" :label-width="formLabelWidth">
+          <el-input v-model="addForm.intro" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="学科备注" :label-width="formLabelWidth">
+          <el-input v-model="addForm.remark" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="$parent.addDialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addDiscipline">确 定</el-button>
+      </div>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -61,8 +63,8 @@ export default {
               this.$message.success("添加成功");
               this.$parent.addDialogFormVisible = false;
               this.$parent.getSubjectList();
-            }else if(res.data.code == 201){
-              this.$message.error('添加失败，该学科编号已存在');
+            } else if (res.data.code == 201) {
+              this.$message.error("添加失败，该学科编号已存在");
             }
             window.console.log(res);
           });
@@ -78,6 +80,7 @@ export default {
 
 <style lang='less'>
 //新增学科对话框样式
+.addSubjectForm {
 .el-dialog {
   width: 603px;
   height: 500px;
@@ -104,4 +107,6 @@ export default {
     text-align: center;
   }
 }
+}
+
 </style>

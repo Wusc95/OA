@@ -26,7 +26,7 @@
             <el-option label="区域二" value="beijing"></el-option>
           </el-select>
         </el-form-item>
-
+        <br />
         <el-form-item label="难度">
           <el-select v-model="formInline.region" placeholder="请选择难度">
             <el-option label="区域一" value="shanghai"></el-option>
@@ -48,14 +48,14 @@
             <el-option label="区域二" value="beijing"></el-option>
           </el-select>
         </el-form-item>
-
+        <br />
         <el-form-item label="标题">
-          <el-input v-model="formInline.user" placeholder="审批人" class="myTitle"></el-input>
+          <el-input v-model="formInline.user" class="myTitle"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary">搜索</el-button>
           <el-button>清除</el-button>
-          <el-button type="primary" icon="el-icon-plus">新增试题</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="addFormVisible=!addFormVisible">新增试题</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -63,7 +63,7 @@
       <el-table :data="tableData" border style="width: 100%">
         <el-table-column type="index" width="80" label="序号"></el-table-column>
         <el-table-column prop="address" label="题目"></el-table-column>
-        <el-table-column prop="address" label="学科.阶段"></el-table-column>
+        <el-table-column prop="address" label="学科·阶段"></el-table-column>
         <el-table-column prop="address" label="题型"></el-table-column>
         <el-table-column prop="address" label="企业"></el-table-column>
         <el-table-column prop="address" label="创建者"></el-table-column>
@@ -83,11 +83,16 @@
         :total="total"
       ></el-pagination>
     </el-card>
+
+    <!--引入新增题库对话框组件-->
+    <addDialog></addDialog>
   </div>
 </template>
 
 <script>
-import {questionList} from '../../../api/question.js'
+//注册新增题库对话框组件
+import addDialog from "./components/addDialog.vue";
+import { questionList } from "../../../api/question.js";
 export default {
   data() {
     return {
@@ -97,27 +102,29 @@ export default {
       },
       //数据
       tableData: [],
+      //新增题库对话框是否显示
+      addFormVisible: false,
       //数据总条数
-      total:0,
+      total: 0,
       //选择每页显示多少
-      pageSizes:[2,4,6,8,10],
+      pageSizes: [2, 4, 6, 8, 10],
       //页码
-      page:1,
+      page: 1,
       //每页显示多少数据
-      limit:6,
+      limit: 6
     };
   },
   methods: {
     //获取数据
-    getQuestionList(){
+    getQuestionList() {
       questionList({
-        limit:this.limit,
-        page:this.page
-      }).then(res=>{
-        window.console.log(res);
-        if(res.data.code == 200){
+        limit: this.limit,
+        page: this.page
+      }).then(res => {
+        // window.console.log(res);
+        if (res.data.code == 200) {
           this.tableData = res.data.data.items;
-          this.total=res.data.data.pagination.total;
+          this.total = res.data.data.pagination.total;
         }
       });
     },
@@ -130,13 +137,16 @@ export default {
     // 页码改变
     handleCurrentChange(page) {
       // window.console.log(`当前页: ${page}`);
-      this.page=page;
+      this.page = page;
       this.getQuestionList();
     }
   },
+  components: {
+    addDialog
+  },
   created() {
     this.getQuestionList();
-  },
+  }
 };
 </script>
 
@@ -144,9 +154,8 @@ export default {
 .question {
   .question-header {
     .myForm {
-      width: 1000px;
       .el-form-item__label {
-        margin: 0 15px;
+        padding: 0 30px;
       }
       .el-input {
         width: 150px;
