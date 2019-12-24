@@ -2,12 +2,6 @@ import Vue from "vue"
 //导入单个组件
 import login from '../views/login/login.vue' //登陆页
 import index from '../views/index/index.vue' //首页
-//导入index页面包含的单个组件
-import user from '../views/index/user/user.vue';
-import subject from '../views/index/subject/subject.vue';
-import question from '../views/index/question/question.vue';
-import enterprise from '../views/index/enterprise/enterprise.vue';
-import chart from '../views/index/chart/chart.vue';
 //导入store(vuex)
 import store from '../store/store.js'
 //导入提示框
@@ -27,6 +21,8 @@ import {
 import VueRouter from 'vue-router'
 //注册 vue-router
 Vue.use(VueRouter)
+//导入自路由
+import children from "./children.js"
 //创建路由规则
 const routes = [{
         path: '/login',
@@ -43,47 +39,7 @@ const routes = [{
         meta:{
             power:['管理员','老师','学生']
         },
-        children: [{
-                path: 'user',
-                component: user,
-                //判断哪些用户可以去
-                meta: {
-                    power: ['管理员']
-                }
-            },
-            {
-                path: 'subject',
-                component: subject,
-                //判断哪些用户可以去
-                meta: {
-                    power: ['管理员', '老师']
-                }
-            },
-            {
-                path: 'question',
-                component: question,
-                //判断哪些用户可以去
-                meta: {
-                    power: ['管理员', '老师', '学生']
-                }
-            },
-            {
-                path: 'enterprise',
-                component: enterprise,
-                //判断哪些用户可以去
-                meta: {
-                    power: ['管理员', '老师']
-                }
-            },
-            {
-                path: 'chart',
-                component: chart,
-                //判断哪些用户可以去
-                meta: {
-                    power: ['管理员', '老师']
-                }
-            }
-        ]
+        children:children
     }
 ];
 // 实例化

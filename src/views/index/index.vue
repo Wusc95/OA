@@ -16,27 +16,35 @@
     <el-container>
       <!-- 左侧 -->
       <el-aside class="aside" width="auto">
-        <el-menu :default-active="$route.path" class="el-menu-vertical-demo list-show" router :collapse="isCollapse">
-          <el-menu-item index="/index/chart" v-if="['管理员','老师'].includes($store.state.userInfo.role)">
-            <i class="el-icon-pie-chart"></i>
-            <span slot="title">数据概览</span>
-          </el-menu-item>
-          <el-menu-item index="/index/user" v-if="['管理员'].includes($store.state.userInfo.role)">
+        <el-menu
+          :default-active="$route.path"
+          class="el-menu-vertical-demo list-show"
+          router
+          :collapse="isCollapse"
+        >
+          <template v-for="(item, index) in children" >
+            <el-menu-item :key="index" :index="`/index/${item.path}`" v-if="item.meta.power.includes($store.state.userInfo.role)">
+              <i :class="item.icon"></i>
+              <span slot="title">{{item.name}}</span>
+            </el-menu-item>
+          </template>
+
+          <!-- <el-menu-item index="/index/user" v-isShow="['学生','老师']">
             <i class="el-icon-user"></i>
             <span slot="title">用户列表</span>
           </el-menu-item>
-          <el-menu-item index="/index/question" v-if="['管理员','老师','学生'].includes($store.state.userInfo.role)">
+          <el-menu-item index="/index/question">
             <i class="el-icon-edit-outline"></i>
             <span slot="title">题库列表</span>
           </el-menu-item>
-          <el-menu-item index="/index/enterprise" v-if="['管理员','老师'].includes($store.state.userInfo.role)">
+          <el-menu-item index="/index/enterprise" v-isShow="['学生']">
             <i class="el-icon-office-building"></i>
             <span slot="title">企业列表</span>
           </el-menu-item>
-          <el-menu-item index="/index/subject" v-if="['管理员','老师'].includes($store.state.userInfo.role)">
+          <el-menu-item index="/index/subject" v-isShow="['学生']">
             <i class="el-icon-notebook-2"></i>
             <span slot="title">学科列表</span>
-          </el-menu-item>
+          </el-menu-item> -->
         </el-menu>
       </el-aside>
       <!-- 主体-->
@@ -53,10 +61,12 @@
 // import {userInnfo} from"../../api/user.js"
 import { userLogout } from "../../api/user";
 import { removeToken } from "../../utils/token.js";
+import children from "../../router/children.js";
 export default {
   data() {
     return {
-      isCollapse: false
+      isCollapse: false,
+      children
     };
   },
   methods: {
@@ -87,7 +97,7 @@ export default {
   },
   computed: {
     //简化userinfo
-    userInfo(){
+    userInfo() {
       return this.$store.state.userInfo;
     }
   },
@@ -100,7 +110,7 @@ export default {
   //   }
   // },
   created() {
-    this.$message.success('登录成功');
+    this.$message.success("登录成功");
     //进入页面，获取用户信息
     // userInnfo().then(res=>{
     //   // window.console.log(res);
