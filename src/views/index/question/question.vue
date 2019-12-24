@@ -16,8 +16,7 @@
         </el-form-item>
         <el-form-item label="企业">
           <el-select v-model="formInline.region" placeholder="请选择企业">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+            <el-option v-for="(item, index) in enterpriseList" :key="index" :label="item.name" :value="item.id" ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="题型">
@@ -93,6 +92,7 @@
 //注册新增题库对话框组件
 import addDialog from "./components/addDialog.vue";
 import { questionList } from "../../../api/question.js";
+import {enterpriseList}  from '../../../api/enterprise.js'
 export default {
   data() {
     return {
@@ -102,6 +102,8 @@ export default {
       },
       //数据
       tableData: [],
+      //企业列表
+      enterpriseList:[],
       //新增题库对话框是否显示
       addFormVisible: false,
       //数据总条数
@@ -146,6 +148,10 @@ export default {
   },
   created() {
     this.getQuestionList();
+    enterpriseList().then(res=>{
+      // window.console.log(res);
+      this.enterpriseList=res.data.data.items;
+    });
   }
 };
 </script>

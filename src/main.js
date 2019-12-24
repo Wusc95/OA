@@ -16,7 +16,8 @@ import router from './router/router.js'
 import store from'./store/store.js'
 //注册
 Vue.use(ElementUI);
-
+//导入控制功能按钮是否显示的自定义指令
+import "./directives/directives.js"
 Vue.config.productionTip = false;
 // window.console.log(process.env.VUE_APP_BASEURL)
 

@@ -48,12 +48,13 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="showEditForm(scope.row)">编辑</el-button>
+            <el-button type="text" @click="showEditForm(scope.row)"  v-isShow="['老师','学生']">编辑</el-button>
             <el-button
               type="text"
               @click="changeStatus(scope.row)"
+              v-isShow="['学生']"
             >{{scope.row.status == 1?"禁用":"启用"}}</el-button>
-            <el-button type="text" @click="userRemove(scope.row)">删除</el-button>
+            <el-button type="text" @click="userRemove(scope.row)" v-isShow="['老师','学生']">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

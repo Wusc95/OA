@@ -48,15 +48,18 @@
         </el-table-column>
         <el-table-column prop="address" label="操作">
           <template slot-scope="scope">
-            <el-button type="text" @click="showEdit(scope.row)">编辑</el-button>
+            <el-button type="text" @click="showEdit(scope.row)" v-isShow="['老师','学生']">编辑</el-button>
+
             <el-button
               type="text"
               @click="changeStatus(scope.row)"
+              v-isShow="['学生']"
             >{{scope.row.status == 1?"禁用":"启用"}}</el-button>
-            <el-button type="text" @click="removeSubject(scope.row)">删除</el-button>
+
+            <el-button type="text" @click="removeSubject(scope.row)" v-isShow="['学生','老师']">删除</el-button>
           </template>
         </el-table-column>
-      </el-table> 
+      </el-table>
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -102,7 +105,7 @@
 <script>
 //导入新增学科对话组件
 import addDialog from "./components/addDialog.vue";
-import editDialog from "./components/editDialog.vue"
+import editDialog from "./components/editDialog.vue";
 // import axios from "axios";
 // import { getToken } from "../../../utils/token";
 import {
@@ -121,9 +124,9 @@ export default {
         username: ""
       },
       //新增对话框是否显示
-      addDialogFormVisible:false,
+      addDialogFormVisible: false,
       //编辑对话框是否显示
-      editDialogFormVisible:false,
+      editDialogFormVisible: false,
       //学科列表
       subjectList: [],
       //页码
@@ -131,17 +134,17 @@ export default {
       //每页多少数据
       limit: 6,
       //总条数
-      total:0,
+      total: 0,
       //选择显示多少条
-      pageSizes:[2,4,6,8,10]
+      pageSizes: [2, 4, 6, 8, 10]
     };
   },
   methods: {
     //进去编辑框状态
-    showEdit(item){
-      this.editDialogFormVisible=true;
+    showEdit(item) {
+      this.editDialogFormVisible = true;
       // window.console.log(item);
-      this.$refs.editDialog.editForm=JSON.parse(JSON.stringify(item));
+      this.$refs.editDialog.editForm = JSON.parse(JSON.stringify(item));
     },
     //删除学科
     removeSubject(item) {
@@ -156,9 +159,9 @@ export default {
           }).then(res => {
             // window.console.log(res);
             if (res.data.code == 200) {
-              this.$message.success('删除成功');
+              this.$message.success("删除成功");
               this.getSubjectList();
-            }else{
+            } else {
               this.$message.error(res.data.message);
             }
           });
@@ -198,19 +201,19 @@ export default {
       }).then(res => {
         // window.console.log(res);
         this.subjectList = res.data.data.items;
-        this.total=res.data.data.pagination.total;
+        this.total = res.data.data.pagination.total;
       });
     },
     //页容量改变
     handleSizeChange(limit) {
       window.console.log(`每页 ${limit} 条`);
-      this.limit=limit;
+      this.limit = limit;
       this.getSubjectList();
     },
     //页码改变
     handleCurrentChange(page) {
       window.console.log(`当前页: ${page}`);
-      this.page=page;
+      this.page = page;
       this.getSubjectList();
     }
   },
