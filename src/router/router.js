@@ -73,9 +73,6 @@ router.beforeEach((to, from, next) => {
                         }else{
                             Message.error('您不具备访问权限，请及时联系管理员');
                         }
-
-
-
                     } else {
                         Message.error('该账号已被禁用，请及时联系管理员');
                         removeToken();
